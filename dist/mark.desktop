@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Mark
+GenericName=Markdown Viewer
+Comment=View Markdown files
+Exec=mark %f
+Icon=mark
+Terminal=false
+Categories=Utility;Viewer;TextTools;
+MimeType=text/markdown;text/x-markdown;
+StartupWMClass=mark

@@ -1,0 +1,82 @@
+html { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.65 "Inter", "Noto Sans", system-ui, sans-serif;
+  zoom: var(--zoom, 1);
+}
+main { max-width: 820px; margin: 0 auto; padding: 40px 32px 30vh; }
+::selection { background: var(--selection); color: var(--fg-strong); }
+
+h1, h2, h3, h4, h5, h6 { color: var(--fg-strong); line-height: 1.25; margin: 1.6em 0 .6em; }
+h1 { font-size: 2em; }
+h1, h2 { padding-bottom: .3em; border-bottom: 1px solid var(--muted); }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.25em; }
+h6 { color: var(--fg-dim); }
+main > :first-child { margin-top: 0; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { color: var(--fg-strong); }
+hr { border: 0; border-top: 1px solid var(--muted); margin: 2em 0; }
+img { max-width: 100%; }
+
+code, pre {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-size: .88em;
+}
+:not(pre) > code {
+  background: var(--bg-alt);
+  color: var(--code);
+  padding: .15em .4em;
+  border-radius: min(4px, var(--radius));
+}
+pre {
+  background: var(--bg-alt);
+  padding: 14px 18px;
+  overflow-x: auto;
+  border-radius: var(--radius);
+  line-height: 1.5;
+}
+
+blockquote {
+  margin: 1em 0;
+  padding: .2em 1em;
+  border-left: 3px solid var(--muted);
+  color: var(--fg-dim);
+}
+blockquote.markdown-alert-note { border-color: var(--blue); }
+blockquote.markdown-alert-tip { border-color: var(--green); }
+blockquote.markdown-alert-important { border-color: var(--magenta); }
+blockquote.markdown-alert-warning { border-color: var(--yellow); }
+blockquote.markdown-alert-caution { border-color: var(--red); }
+
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--muted); padding: 6px 13px; }
+th { background: var(--bg-alt); color: var(--fg-strong); }
+tr:nth-child(2n) td { background: color-mix(in srgb, var(--bg-alt) 45%, transparent); }
+
+li > input[type=checkbox] { accent-color: var(--accent); margin-right: .4em; }
+ul:has(> li > input[type=checkbox]) { list-style: none; padding-left: 1.2em; }
+
+.footnote-definition { font-size: .9em; color: var(--fg-dim); }
+.footnote-definition p { display: inline; }
+
+#mark-help {
+  position: fixed; inset: 0;
+  display: none; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  zoom: calc(1 / var(--zoom, 1));
+}
+#mark-help.open { display: flex; }
+#mark-help div {
+  background: var(--bg-alt);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 28px;
+}
+#mark-help table { display: table; margin: 0; }
+#mark-help td { border: 0; padding: 3px 12px; background: none; }
+#mark-help kbd { color: var(--accent); font-family: "JetBrainsMono Nerd Font", monospace; }
