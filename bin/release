@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Tags the version in Cargo.toml and publishes a GitHub release with a
+# prebuilt x86_64 tarball (named without the version, so the README's
+# releases/latest/download link always works). Run from a clean, pushed main:
+#   bin/release            # releases the version currently in Cargo.toml
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+tag="v$version"
+name="mark-x86_64-linux"
+
+[[ -z "$(git status --porcelain)" ]] || { echo "Working tree isn't clean." >&2; exit 1; }
+git fetch -q origin
+[[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] || { echo "HEAD isn't origin/main; push first." >&2; exit 1; }
+git rev-parse -q --verify "refs/tags/$tag" >/dev/null && { echo "$tag already exists; bump the version in Cargo.toml." >&2; exit 1; }
+
+cargo test --locked -q
+cargo build --release --locked
+
+stage=$(mktemp -d)
+trap 'rm -rf "$stage"' EXIT
+mkdir -p "$stage/$name/bin" "$stage/$name/dist"
+install -m755 target/release/mark bin/install bin/uninstall "$stage/$name/bin/"
+install -m644 dist/mark.desktop dist/mark.svg "$stage/$name/dist/"
+install -m644 README.md LICENSE "$stage/$name/"
+mkdir -p target/release-dist
+tar -C "$stage" -czf "target/release-dist/$name.tar.gz" "$name"
+(cd target/release-dist && sha256sum "$name.tar.gz" > "$name.tar.gz.sha256")
+
+git tag -a "$tag" -m "Mark $tag"
+git push -q origin "$tag"
+gh release create "$tag" --title "Mark $tag" --generate-notes \
+  "target/release-dist/$name.tar.gz" "target/release-dist/$name.tar.gz.sha256"

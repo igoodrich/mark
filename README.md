@@ -4,6 +4,8 @@ A small Markdown viewer for [Omarchy](https://omarchy.org). One window, no editi
 shows a Markdown file the way GitHub would, in the colors of the current Omarchy theme,
 and re-renders whenever the file changes on disk — keep it open beside your editor.
 
+![Mark showing a Markdown file in Omarchy's Tokyo Night theme](docs/screenshot.png)
+
 ```sh
 mark notes.md
 ```
@@ -34,16 +36,41 @@ app launcher (Super + Space).
 | `?` | Show shortcuts |
 | `q`, `Ctrl+Q`, `Ctrl+W` | Quit |
 
-## Build and install
+## Install
 
-Needs Rust and `webkit2gtk-4.1` (already part of Omarchy).
+Mark is built for [Omarchy](https://omarchy.org) (Arch Linux, Hyprland) and needs
+`webkit2gtk-4.1`, which Omarchy already includes. Everything installs under your home
+directory; no sudo.
+
+**From a release** (no Rust needed) — grab the tarball from the
+[latest release](https://github.com/igoodrich/mark/releases/latest):
+
+```sh
+curl -LO https://github.com/igoodrich/mark/releases/latest/download/mark-x86_64-linux.tar.gz
+tar xzf mark-x86_64-linux.tar.gz
+mark-x86_64-linux/bin/install
+```
+
+**From source** (needs Rust):
+
+```sh
+git clone https://github.com/igoodrich/mark && cd mark
+bin/install
+```
+
+`bin/install` puts the binary in `~/.local/bin`, adds Mark to the app launcher, and makes
+it the default app for `.md` files. Pass `--no-default` to leave your current default
+alone. `bin/uninstall` removes it all.
+
+If Mark doesn't appear in the file manager's *Open With* list right away, restart the
+file manager (`nautilus -q`).
+
+## Develop
 
 ```sh
 cargo run -- README.md   # try it
 cargo test
-bin/install              # binary, launcher entry, icon; makes Mark the default for .md
-bin/install --no-default # same, without changing the default .md app
-bin/uninstall
+bin/release              # tag the Cargo.toml version and publish a GitHub release
 ```
 
 Under the hood: `pulldown-cmark` renders the Markdown, and `tao` + `wry` show it in a

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 data="${XDG_DATA_HOME:-$HOME/.local/share}"
-cargo uninstall --root "$HOME/.local" mark || true
-rm -f "$data/applications/mark.desktop" "$data/icons/hicolor/scalable/apps/mark.svg"
+rm -f "$HOME/.local/bin/mark" "$data/applications/mark.desktop" "$data/icons/hicolor/scalable/apps/mark.svg"
 update-desktop-database -q "$data/applications" 2>/dev/null || true
 echo "Removed Mark. Pick a new Markdown default with: xdg-mime default <app>.desktop text/markdown"

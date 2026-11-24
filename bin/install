@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
-# Builds Mark and installs it for the current user: the binary in ~/.local/bin
-# (on the desktop session's PATH, unlike ~/.cargo/bin, so file managers find it),
-# the launcher entry and icon under ~/.local/share, and Mark as the default
-# app for Markdown files. No sudo needed.
+# Installs Mark for the current user: the binary in ~/.local/bin (on the
+# desktop session's PATH, unlike ~/.cargo/bin, so file managers find it), the
+# launcher entry and icon under ~/.local/share, and Mark as the default app
+# for Markdown files. No sudo needed.
+#
+# In a release tarball the binary is already built (bin/mark); in a source
+# checkout it's built here, which needs Rust.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-cargo install --path . --locked --force --root "$HOME/.local"
+if [[ -f bin/mark ]]; then
+  binary=bin/mark
+else
+  cargo build --release --locked
+  binary=target/release/mark
+fi
 
 data="${XDG_DATA_HOME:-$HOME/.local/share}"
+install -Dm755 "$binary" "$HOME/.local/bin/mark"
 install -Dm644 dist/mark.desktop "$data/applications/mark.desktop"
 install -Dm644 dist/mark.svg "$data/icons/hicolor/scalable/apps/mark.svg"
 update-desktop-database -q "$data/applications" 2>/dev/null || true
@@ -17,4 +26,4 @@ gtk-update-icon-cache -q "$data/icons/hicolor" 2>/dev/null || true
 if [[ "${1:-}" != "--no-default" ]]; then
   xdg-mime default mark.desktop text/markdown text/x-markdown
 fi
-echo "Installed $(mark --version)."
+echo "Installed $("$HOME/.local/bin/mark" --version) to ~/.local/bin/mark."
